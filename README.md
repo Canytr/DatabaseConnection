@@ -43,8 +43,8 @@ Click the Connect button to establish a connection to the database. You will see
 Once connected, the application will fetch and display the list of tables in the database in a ComboBox.
 Select a table from the ComboBox to view its data in the DataGridView.
 
-Contributing
+## Contributing
 If you would like to contribute to this project, please fork the repository and submit a pull request. Contributions such as bug fixes, feature additions, and documentation improvements are welcome!
 
-License
-This project is licensed under the MIT License - see the [MIT](LICENSE) file for details.
+## License
+Distributed under the MIT License. See [MIT](LICENSE) for more information.
