@@ -47,4 +47,4 @@ Select a table from the ComboBox to view its data in the DataGridView.
 If you would like to contribute to this project, please fork the repository and submit a pull request. Contributions such as bug fixes, feature additions, and documentation improvements are welcome!
 
 ## License
-Distributed under the MIT License. See [MIT](LICENSE) for more information.
+Distributed under the MIT License. See [MIT](LICENSE.txt) for more information.
