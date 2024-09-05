@@ -26,7 +26,7 @@ SQL Server: An SQL Server instance should be available for connection.
 ### Installation
 Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/DatabaseConnection.git
+   git clone https://github.com/Canytr/DatabaseConnection.git
    ```
 
 Open the solution file (DatabaseConnection.sln) in Visual Studio.
