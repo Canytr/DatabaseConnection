@@ -7,9 +7,16 @@ namespace DatabaseConnection
 {
     public partial class Form1 : Form
     {
+
+        private Logger _logger;
+
         public Form1()
         {
             InitializeComponent();
+
+            // Logger nesnesini oluşturuyoruz ve RichTextBox referansını veriyoruz
+            _logger = new Logger(richTextBoxLog);
+
             txtConnectionString.AppendText("Data Source=DESKTOP-9FBPMP7\\SQLEXPRESS;Initial Catalog=Help_Menu;Integrated Security=True;Pooling=False;Encrypt=False\r\n");
             cmbTables.SelectedIndexChanged += cmbTables_SelectedIndexChanged; // ComboBox'taki seçim değişikliğini dinliyoruz
         }
@@ -93,7 +100,7 @@ namespace DatabaseConnection
                 {
                     connection.Open();
                     MessageBox.Show("Connection successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LogMessage("Connection successful!");
+                    _logger.LogMessage("Connection successful!", Logger.LogLevel.Info);
 
                     // Tablo isimlerini al ve ComboBox'a yükle
                     FetchTableNames(connection);
@@ -101,7 +108,7 @@ namespace DatabaseConnection
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Connection failed: {ex.Message}\n\n{ex.StackTrace}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    LogMessage($"Connection failed: {ex.Message}");
+                    _logger.LogMessage($"Connection failed: {ex.Message}", Logger.LogLevel.Error);
                 }
             }
         }
@@ -123,7 +130,7 @@ namespace DatabaseConnection
             try
             {
 
-                LogMessage($"Executing SQL Command: {query}");
+                _logger.LogMessage($"Executing SQL Command: {query}", Logger.LogLevel.Info);
 
                 if (query.Trim().StartsWith("SELECT", StringComparison.OrdinalIgnoreCase))
                 {
@@ -138,13 +145,13 @@ namespace DatabaseConnection
                     // SELECT dışındaki komutlar için (INSERT, UPDATE, DELETE, vb.) ExecuteNonQuery kullanıyoruz
                     int affectedRows = command.ExecuteNonQuery();
                     MessageBox.Show($"{affectedRows} rows affected.", "Execution Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LogMessage($"{affectedRows} rows affected by the command.");
+                    _logger.LogMessage($"{affectedRows} rows affected by the command.", Logger.LogLevel.Info);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"SQL execution failed: {ex.Message}\n\n{ex.StackTrace}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                LogMessage($"SQL execution failed: {ex.Message}");
+                _logger.LogMessage($"SQL execution failed: {ex.Message}", Logger.LogLevel.Error);
             }
         }
 
@@ -212,19 +219,6 @@ namespace DatabaseConnection
 
             richTextBoxSql.Text = deleteTableScript; // Scripti RichTextBox'a ekle
         }
-
-
-        //Log Messages
-        private void LogMessage(string message)
-        {
-            // Log mesajını zaman damgasıyla RichTextBox'a ekle
-            richTextBoxLog.AppendText($"{DateTime.Now}: {message}\r\n");
-
-            // En son log mesajını görünür yapmak için imleci en sona kaydır
-            richTextBoxLog.SelectionStart = richTextBoxLog.Text.Length;
-            richTextBoxLog.ScrollToCaret();
-        }
-
 
     }
 }
