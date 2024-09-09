@@ -42,6 +42,11 @@
             this.btnDeleteTable = new System.Windows.Forms.Button();
             this.labelLog = new System.Windows.Forms.Label();
             this.richTextBoxLog = new System.Windows.Forms.RichTextBox();
+            this.btnSaveCommand = new System.Windows.Forms.Button();
+            this.btnLoadCommand = new System.Windows.Forms.Button();
+            this.btnEditCommand = new System.Windows.Forms.Button();
+            this.btnDeleteCommand = new System.Windows.Forms.Button();
+            this.listBoxCommands = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -146,7 +151,7 @@
             // 
             // btnAddTable
             // 
-            this.btnAddTable.Location = new System.Drawing.Point(659, 383);
+            this.btnAddTable.Location = new System.Drawing.Point(575, 484);
             this.btnAddTable.Name = "btnAddTable";
             this.btnAddTable.Size = new System.Drawing.Size(85, 23);
             this.btnAddTable.TabIndex = 17;
@@ -156,7 +161,7 @@
             // 
             // btnDeleteTable
             // 
-            this.btnDeleteTable.Location = new System.Drawing.Point(659, 412);
+            this.btnDeleteTable.Location = new System.Drawing.Point(666, 484);
             this.btnDeleteTable.Name = "btnDeleteTable";
             this.btnDeleteTable.Size = new System.Drawing.Size(85, 23);
             this.btnDeleteTable.TabIndex = 18;
@@ -183,9 +188,62 @@
             this.richTextBoxLog.TabIndex = 20;
             this.richTextBoxLog.Text = "";
             // 
+            // btnSaveCommand
+            // 
+            this.btnSaveCommand.Location = new System.Drawing.Point(437, 354);
+            this.btnSaveCommand.Name = "btnSaveCommand";
+            this.btnSaveCommand.Size = new System.Drawing.Size(87, 23);
+            this.btnSaveCommand.TabIndex = 21;
+            this.btnSaveCommand.Text = "Save Script";
+            this.btnSaveCommand.UseVisualStyleBackColor = true;
+            this.btnSaveCommand.Click += new System.EventHandler(this.btnSaveCommand_Click);
+            // 
+            // btnLoadCommand
+            // 
+            this.btnLoadCommand.Location = new System.Drawing.Point(544, 354);
+            this.btnLoadCommand.Name = "btnLoadCommand";
+            this.btnLoadCommand.Size = new System.Drawing.Size(87, 23);
+            this.btnLoadCommand.TabIndex = 22;
+            this.btnLoadCommand.Text = "Load Script";
+            this.btnLoadCommand.UseVisualStyleBackColor = true;
+            this.btnLoadCommand.Click += new System.EventHandler(this.btnLoadCommand_Click);
+            // 
+            // btnEditCommand
+            // 
+            this.btnEditCommand.Location = new System.Drawing.Point(649, 354);
+            this.btnEditCommand.Name = "btnEditCommand";
+            this.btnEditCommand.Size = new System.Drawing.Size(87, 23);
+            this.btnEditCommand.TabIndex = 23;
+            this.btnEditCommand.Text = "Edit Script";
+            this.btnEditCommand.UseVisualStyleBackColor = true;
+            this.btnEditCommand.Click += new System.EventHandler(this.btnEditCommand_Click);
+            // 
+            // btnDeleteCommand
+            // 
+            this.btnDeleteCommand.Location = new System.Drawing.Point(751, 354);
+            this.btnDeleteCommand.Name = "btnDeleteCommand";
+            this.btnDeleteCommand.Size = new System.Drawing.Size(87, 23);
+            this.btnDeleteCommand.TabIndex = 24;
+            this.btnDeleteCommand.Text = "Delete Script";
+            this.btnDeleteCommand.UseVisualStyleBackColor = true;
+            this.btnDeleteCommand.Click += new System.EventHandler(this.btnDeleteCommand_Click);
+            // 
+            // listBoxCommands
+            // 
+            this.listBoxCommands.FormattingEnabled = true;
+            this.listBoxCommands.Location = new System.Drawing.Point(575, 383);
+            this.listBoxCommands.Name = "listBoxCommands";
+            this.listBoxCommands.Size = new System.Drawing.Size(265, 95);
+            this.listBoxCommands.TabIndex = 25;
+            // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(893, 617);
+            this.Controls.Add(this.listBoxCommands);
+            this.Controls.Add(this.btnDeleteCommand);
+            this.Controls.Add(this.btnEditCommand);
+            this.Controls.Add(this.btnLoadCommand);
+            this.Controls.Add(this.btnSaveCommand);
             this.Controls.Add(this.richTextBoxLog);
             this.Controls.Add(this.labelLog);
             this.Controls.Add(this.btnDeleteTable);
@@ -222,6 +280,11 @@
         private System.Windows.Forms.Button btnDeleteTable;
         private System.Windows.Forms.Label labelLog;
         private System.Windows.Forms.RichTextBox richTextBoxLog;
+        private System.Windows.Forms.Button btnSaveCommand;
+        private System.Windows.Forms.Button btnLoadCommand;
+        private System.Windows.Forms.Button btnEditCommand;
+        private System.Windows.Forms.Button btnDeleteCommand;
+        private System.Windows.Forms.ListBox listBoxCommands;
     }
 }
 

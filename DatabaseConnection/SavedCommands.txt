@@ -1,0 +1,6 @@
+CREATE TABLE DatabaseDocument
+(
+    DocumentID INT IDENTITY(1,1) PRIMARY KEY,   -- Benzersiz belge kimliği (otomatik artan)
+    Title NVARCHAR(255) NOT NULL,               -- Belge başlığı
+);
+DROP TABLE DatabaseDocument;

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Windows.Forms;
 
 namespace DatabaseConnection
@@ -19,11 +21,9 @@ namespace DatabaseConnection
 
             txtConnectionString.AppendText("Data Source=DESKTOP-9FBPMP7\\SQLEXPRESS;Initial Catalog=Help_Menu;Integrated Security=True;Pooling=False;Encrypt=False\r\n");
             cmbTables.SelectedIndexChanged += cmbTables_SelectedIndexChanged; // ComboBox'taki seçim değişikliğini dinliyoruz
-        }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            // İsteğe bağlı: TextBox içeriği değiştikçe yapılacak işlemler burada olabilir.
+            // Dosyadaki komutları form açılışında yükleyelim
+            LoadCommandsFromFile();
         }
 
         private void FetchTableNames(SqlConnection connection)
@@ -220,5 +220,93 @@ namespace DatabaseConnection
             richTextBoxSql.Text = deleteTableScript; // Scripti RichTextBox'a ekle
         }
 
+
+        //
+        // SQL komutlarını tutmak için bir liste oluşturuyoruz
+        private List<string> sqlCommands = new List<string>();
+
+        // SavedCommands.txt dosya yolunu proje kök dizinine yönlendiriyoruz
+        private string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../SavedCommands.txt");
+
+        private void btnSaveCommand_Click(object sender, EventArgs e)
+        {
+            // Kullanıcının yazdığı SQL komutunu alıyoruz
+            string command = richTextBoxSql.Text;
+
+            if (!string.IsNullOrWhiteSpace(command))
+            {
+                // Listeye SQL komutunu ekliyoruz
+                sqlCommands.Add(command);
+
+                // Komutu bir dosyaya kaydediyoruz (proje kök dizinindeki dosyaya)
+                File.AppendAllText(filePath, command + Environment.NewLine);
+
+                // Listeyi UI'de güncelle
+                listBoxCommands.Items.Add(command);
+            }
+            else
+            {
+                MessageBox.Show("Lütfen geçerli bir SQL komutu girin.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void LoadCommandsFromFile()
+        {
+            // Dosyadan komutları okuyup listeye ekliyoruz
+            if (File.Exists("../../SavedCommands.txt"))
+            {
+                var commands = File.ReadAllLines("SavedCommands.txt");
+
+                foreach (var cmd in commands)
+                {
+                    if (!string.IsNullOrWhiteSpace(cmd))
+                    {
+                        // Komutları listeye ve UI'ye ekle
+                        sqlCommands.Add(cmd);
+                        listBoxCommands.Items.Add(cmd);
+                    }
+                }
+            }
+        }
+
+        private void btnLoadCommand_Click(object sender, EventArgs e)
+        {
+            // Seçilen komutu TextBox'a geri yükleyelim
+            if (listBoxCommands.SelectedItem != null)
+            {
+                string selectedCommand = listBoxCommands.SelectedItem.ToString();
+                richTextBoxSql.Text = selectedCommand;
+            }
+        }
+
+        private void btnEditCommand_Click(object sender, EventArgs e)
+        {
+            if (listBoxCommands.SelectedItem != null)
+            {
+                string selectedCommand = listBoxCommands.SelectedItem.ToString();
+
+                // Kullanıcı düzenlemesi için komutu RichTextBox'a geri yüklüyoruz
+                richTextBoxSql.Text = selectedCommand;
+
+                // Listeden komutu siliyoruz ve yeni düzenlenmiş haliyle yeniden ekliyoruz
+                sqlCommands.Remove(selectedCommand);
+                listBoxCommands.Items.Remove(selectedCommand);
+            }
+        }
+
+        private void btnDeleteCommand_Click(object sender, EventArgs e)
+        {
+            if (listBoxCommands.SelectedItem != null)
+            {
+                string selectedCommand = listBoxCommands.SelectedItem.ToString();
+
+                // Listeden ve dosyadan komutu siliyoruz
+                sqlCommands.Remove(selectedCommand);
+                listBoxCommands.Items.Remove(selectedCommand);
+
+                // Dosyayı güncelle (proje kök dizinindeki dosya)
+                File.WriteAllLines(filePath, sqlCommands);
+            }
+        }
     }
 }
