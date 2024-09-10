@@ -2,13 +2,3 @@ add table
 use table
 update 
 update table 
-update 2
-update table1;
-update talbe2;
-alphbet
-a
-b
-c
-d
-hello
-merhaba 

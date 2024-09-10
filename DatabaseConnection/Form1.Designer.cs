@@ -47,6 +47,7 @@
             this.btnEditCommand = new System.Windows.Forms.Button();
             this.btnDeleteCommand = new System.Windows.Forms.Button();
             this.listBoxCommands = new System.Windows.Forms.ListBox();
+            this.btnSaveChanges = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -236,9 +237,20 @@
             this.listBoxCommands.Size = new System.Drawing.Size(265, 95);
             this.listBoxCommands.TabIndex = 25;
             // 
+            // btnSaveChanges
+            // 
+            this.btnSaveChanges.Location = new System.Drawing.Point(359, 94);
+            this.btnSaveChanges.Name = "btnSaveChanges";
+            this.btnSaveChanges.Size = new System.Drawing.Size(102, 23);
+            this.btnSaveChanges.TabIndex = 26;
+            this.btnSaveChanges.Text = "Save Changes";
+            this.btnSaveChanges.UseVisualStyleBackColor = true;
+            this.btnSaveChanges.Click += new System.EventHandler(this.btnSaveChanges_Click);
+            // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(893, 617);
+            this.Controls.Add(this.btnSaveChanges);
             this.Controls.Add(this.listBoxCommands);
             this.Controls.Add(this.btnDeleteCommand);
             this.Controls.Add(this.btnEditCommand);
@@ -285,6 +297,7 @@
         private System.Windows.Forms.Button btnEditCommand;
         private System.Windows.Forms.Button btnDeleteCommand;
         private System.Windows.Forms.ListBox listBoxCommands;
+        private System.Windows.Forms.Button btnSaveChanges;
     }
 }
 

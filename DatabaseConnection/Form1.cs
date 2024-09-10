@@ -368,5 +368,52 @@ namespace DatabaseConnection
                 }
             }
         }
+
+        private void btnSaveChanges_Click(object sender, EventArgs e)
+        {
+            string connectionString = txtConnectionString.Text;
+            string selectedTable = cmbTables.SelectedItem.ToString();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+
+                    // SELECT sorgusu oluştur
+                    string query = $"SELECT * FROM {selectedTable}";
+
+                    // DataAdapter ile veriyi çek
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter(query, connection);
+
+                    // UpdateCommand, InsertCommand ve DeleteCommand ayarları
+                    SqlCommandBuilder commandBuilder = new SqlCommandBuilder(dataAdapter);
+
+                    // DataTable'ı güncelle
+                    DataTable changes = ((DataTable)dataGridView.DataSource).GetChanges();
+
+                    if (changes != null)
+                    {
+                        // Değişiklikleri veritabanına gönder
+                        int updatedRows = dataAdapter.Update(changes);
+
+                        // Eğer değişiklik varsa bildir
+                        MessageBox.Show($"{updatedRows} rows updated in the database.", "Update Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        // Değişiklikleri kabul et
+                        ((DataTable)dataGridView.DataSource).AcceptChanges();
+                    }
+                    else
+                    {
+                        MessageBox.Show("No changes detected.", "No Changes", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Update failed: {ex.Message}\n\n{ex.StackTrace}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
     }
 }
