@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace DatabaseConnection
@@ -222,48 +223,69 @@ namespace DatabaseConnection
 
 
         //
-        // SQL komutlarını tutmak için bir liste oluşturuyoruz
-        private List<string> sqlCommands = new List<string>();
+        // SQL komutları için liste (başlık + komut)
+        private List<SqlCommandEntry> sqlCommands = new List<SqlCommandEntry>();
 
         // SavedCommands.txt dosya yolunu proje kök dizinine yönlendiriyoruz
         private string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../SavedCommands.txt");
 
         private void btnSaveCommand_Click(object sender, EventArgs e)
         {
-            // Kullanıcının yazdığı SQL komutunu alıyoruz
             string command = richTextBoxSql.Text;
 
             if (!string.IsNullOrWhiteSpace(command))
             {
-                // Listeye SQL komutunu ekliyoruz
-                sqlCommands.Add(command);
+                // Kullanıcıdan başlık girmesini iste
+                string title = Prompt.ShowDialog("Please enter a title for the SQL command:", "Save SQL Command");
 
-                // Komutu bir dosyaya kaydediyoruz (proje kök dizinindeki dosyaya)
-                File.AppendAllText(filePath, command + Environment.NewLine);
+                if (!string.IsNullOrWhiteSpace(title))
+                {
+                    // Yeni SQL komut girişini oluştur
+                    SqlCommandEntry newEntry = new SqlCommandEntry
+                    {
+                        Title = title,
+                        Command = command
+                    };
 
-                // Listeyi UI'de güncelle
-                listBoxCommands.Items.Add(command);
+                    // Listeye ekle
+                    sqlCommands.Add(newEntry);
+
+                    // Dosyaya kaydet
+                    File.AppendAllText(filePath, title + Environment.NewLine + command + Environment.NewLine);
+
+                    // Listeyi UI'de güncelle
+                    listBoxCommands.Items.Add(newEntry);
+                }
             }
             else
             {
-                MessageBox.Show("Lütfen geçerli bir SQL komutu girin.", "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Please enter a valid SQL command.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void LoadCommandsFromFile()
         {
-            // Dosyadan komutları okuyup listeye ekliyoruz
-            if (File.Exists("../../SavedCommands.txt"))
+            if (File.Exists(filePath))
             {
-                var commands = File.ReadAllLines("SavedCommands.txt");
+                var lines = File.ReadAllLines(filePath);
 
-                foreach (var cmd in commands)
+                for (int i = 0; i < lines.Length; i += 2)
                 {
-                    if (!string.IsNullOrWhiteSpace(cmd))
+                    if (i + 1 < lines.Length)
                     {
-                        // Komutları listeye ve UI'ye ekle
-                        sqlCommands.Add(cmd);
-                        listBoxCommands.Items.Add(cmd);
+                        // Başlık ve komut çiftlerini oluştur
+                        string title = lines[i];
+                        string command = lines[i + 1];
+
+                        SqlCommandEntry entry = new SqlCommandEntry
+                        {
+                            Title = title,
+                            Command = command
+                        };
+
+                        // Listeye ekle
+                        sqlCommands.Add(entry);
+                        listBoxCommands.Items.Add(entry);
                     }
                 }
             }
@@ -271,11 +293,10 @@ namespace DatabaseConnection
 
         private void btnLoadCommand_Click(object sender, EventArgs e)
         {
-            // Seçilen komutu TextBox'a geri yükleyelim
             if (listBoxCommands.SelectedItem != null)
             {
-                string selectedCommand = listBoxCommands.SelectedItem.ToString();
-                richTextBoxSql.Text = selectedCommand;
+                SqlCommandEntry selectedEntry = (SqlCommandEntry)listBoxCommands.SelectedItem;
+                richTextBoxSql.Text = selectedEntry.Command;
             }
         }
 
@@ -283,29 +304,68 @@ namespace DatabaseConnection
         {
             if (listBoxCommands.SelectedItem != null)
             {
-                string selectedCommand = listBoxCommands.SelectedItem.ToString();
+                SqlCommandEntry selectedEntry = (SqlCommandEntry)listBoxCommands.SelectedItem;
 
-                // Kullanıcı düzenlemesi için komutu RichTextBox'a geri yüklüyoruz
-                richTextBoxSql.Text = selectedCommand;
+                string newCommand = richTextBoxSql.Text;
 
-                // Listeden komutu siliyoruz ve yeni düzenlenmiş haliyle yeniden ekliyoruz
-                sqlCommands.Remove(selectedCommand);
-                listBoxCommands.Items.Remove(selectedCommand);
+                // Listeyi güncelle
+                selectedEntry.Command = newCommand;
+                UpdateCommandsFile();
+
+                MessageBox.Show("Command updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        // SQL komutlarının dosyasını güncellemek için metod
+        private void UpdateCommandsFile()
+        {
+            List<string> lines = new List<string>();
+
+            foreach (var entry in sqlCommands)
+            {
+                lines.Add(entry.Title);
+                lines.Add(entry.Command);
+            }
+
+            File.WriteAllLines(filePath, lines);
         }
 
         private void btnDeleteCommand_Click(object sender, EventArgs e)
         {
             if (listBoxCommands.SelectedItem != null)
             {
-                string selectedCommand = listBoxCommands.SelectedItem.ToString();
+                string selectedTitle = listBoxCommands.SelectedItem.ToString(); // Seçilen başlık
 
-                // Listeden ve dosyadan komutu siliyoruz
-                sqlCommands.Remove(selectedCommand);
-                listBoxCommands.Items.Remove(selectedCommand);
+                // Başlık üzerinden komutu buluyoruz
+                var commandToRemove = sqlCommands.FirstOrDefault(cmd => cmd.Title == selectedTitle);
 
-                // Dosyayı güncelle (proje kök dizinindeki dosya)
-                File.WriteAllLines(filePath, sqlCommands);
+                if (commandToRemove != null)
+                {
+                    // Listeden komutu siliyoruz
+                    sqlCommands.Remove(commandToRemove);
+                    listBoxCommands.Items.Remove(selectedTitle); // ListBox'tan başlığı siliyoruz
+
+                    // Seçimi sıfırlıyoruz
+                    listBoxCommands.ClearSelected();
+
+                    // ListBox'ı yenile
+                    listBoxCommands.Refresh();
+
+                    // Dosyadaki kayıtları başlık ve komutlar ile güncelliyoruz
+                    List<string> updatedCommands = new List<string>();
+                    foreach (var command in sqlCommands)
+                    {
+                        // Her komutu başlık ve script şeklinde kaydediyoruz
+                        updatedCommands.Add(command.Title + Environment.NewLine + command.Command);
+                    }
+
+                    // Dosyayı güncelle
+                    File.WriteAllLines(filePath, updatedCommands);
+                }
+                else
+                {
+                    MessageBox.Show("Command not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }

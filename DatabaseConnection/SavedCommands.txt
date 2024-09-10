@@ -1,6 +1,14 @@
-CREATE TABLE DatabaseDocument
-(
-    DocumentID INT IDENTITY(1,1) PRIMARY KEY,   -- Benzersiz belge kimliği (otomatik artan)
-    Title NVARCHAR(255) NOT NULL,               -- Belge başlığı
-);
-DROP TABLE DatabaseDocument;
+add table
+use table
+update 
+update table 
+update 2
+update table1;
+update talbe2;
+alphbet
+a
+b
+c
+d
+hello
+merhaba 
