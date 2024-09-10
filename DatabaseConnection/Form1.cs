@@ -17,19 +17,19 @@ namespace DatabaseConnection
         {
             InitializeComponent();
 
-            // Logger nesnesini oluşturuyoruz ve RichTextBox referansını veriyoruz
+            // We create the Logger object and pass the RichTextBox reference
             _logger = new Logger(richTextBoxLog);
 
             txtConnectionString.AppendText("Data Source=DESKTOP-9FBPMP7\\SQLEXPRESS;Initial Catalog=Help_Menu;Integrated Security=True;Pooling=False;Encrypt=False\r\n");
-            cmbTables.SelectedIndexChanged += cmbTables_SelectedIndexChanged; // ComboBox'taki seçim değişikliğini dinliyoruz
+            cmbTables.SelectedIndexChanged += cmbTables_SelectedIndexChanged;
 
-            // Dosyadaki komutları form açılışında yükleyelim
+            // Load the commands from the file when the form opens
             LoadCommandsFromFile();
         }
 
         private void FetchTableNames(SqlConnection connection)
         {
-            // Tablo isimlerini almak için SQL sorgusu
+            // SQL query to retrieve table names
             string query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE'";
 
             SqlCommand command = new SqlCommand(query, connection);
@@ -40,7 +40,7 @@ namespace DatabaseConnection
                 reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    // Tablo isimlerini ComboBox'a ekle
+                    // Add the table names to the ComboBox
                     cmbTables.Items.Add(reader["TABLE_NAME"].ToString());
                 }
                 reader.Close();
@@ -53,9 +53,9 @@ namespace DatabaseConnection
 
         private void FetchAndDisplayData(SqlConnection connection)
         {
-            // ComboBox'tan seçilen tablo ismini al
+            // Get the table name selected from the ComboBox
             string selectedTable = cmbTables.SelectedItem.ToString();
-            string query = $"SELECT TOP 10 * FROM {selectedTable}"; // İstediğiniz sorgu logic'i
+            string query = $"SELECT TOP 10 * FROM {selectedTable}"; // Load top 10 row
 
             SqlDataAdapter dataAdapter = new SqlDataAdapter(query, connection);
             DataTable dataTable = new DataTable();
@@ -63,7 +63,7 @@ namespace DatabaseConnection
             try
             {
                 dataAdapter.Fill(dataTable);
-                dataGridView.DataSource = dataTable; // Verileri DataGridView'e yükle
+                dataGridView.DataSource = dataTable; // Load data to DataGridView
             }
             catch (Exception ex)
             {
@@ -73,7 +73,7 @@ namespace DatabaseConnection
 
         private void cmbTables_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // ComboBox'ta bir tablo seçildiğinde bu olay tetiklenir.
+            // This event is triggered when a table is selected in the ComboBox.
             string connectionString = txtConnectionString.Text;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -81,7 +81,7 @@ namespace DatabaseConnection
                 try
                 {
                     connection.Open();
-                    FetchAndDisplayData(connection); // Verileri göster
+                    FetchAndDisplayData(connection); // Show data
                 }
                 catch (Exception ex)
                 {
@@ -92,7 +92,6 @@ namespace DatabaseConnection
 
         private void btnConnect_Click_1(object sender, EventArgs e)
         {
-            // Bağlantı dizesini al
             string connectionString = txtConnectionString.Text;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -103,7 +102,7 @@ namespace DatabaseConnection
                     MessageBox.Show("Connection successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     _logger.LogMessage("Connection successful!", Logger.LogLevel.Info);
 
-                    // Tablo isimlerini al ve ComboBox'a yükle
+                    // Retrieve the table names and load them into the ComboBox
                     FetchTableNames(connection);
                 }
                 catch (Exception ex)
@@ -114,11 +113,10 @@ namespace DatabaseConnection
             }
         }
 
-        //SQL
-        // SQL Komutunu çalıştıran metot
+        // Method to execute the SQL command
         private void ExecuteSqlCommand(SqlConnection connection)
         {
-            string query = richTextBoxSql.Text; // TextBox'taki SQL komutunu alıyoruz
+            string query = richTextBoxSql.Text; 
 
             if (string.IsNullOrWhiteSpace(query))
             {
@@ -135,7 +133,7 @@ namespace DatabaseConnection
 
                 if (query.Trim().StartsWith("SELECT", StringComparison.OrdinalIgnoreCase))
                 {
-                    // Eğer bir SELECT sorgusuysa verileri getirip DataGridView'e gösteriyoruz
+                    // If it is a SELECT query, retrieve the data and display it in the DataGridView
                     SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
                     DataTable dataTable = new DataTable();
                     dataAdapter.Fill(dataTable);
@@ -143,7 +141,7 @@ namespace DatabaseConnection
                 }
                 else
                 {
-                    // SELECT dışındaki komutlar için (INSERT, UPDATE, DELETE, vb.) ExecuteNonQuery kullanıyoruz
+                    // For commands other than SELECT (INSERT, UPDATE, DELETE, etc.), we use ExecuteNonQuery
                     int affectedRows = command.ExecuteNonQuery();
                     MessageBox.Show($"{affectedRows} rows affected.", "Execution Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     _logger.LogMessage($"{affectedRows} rows affected by the command.", Logger.LogLevel.Info);
@@ -165,7 +163,7 @@ namespace DatabaseConnection
                 try
                 {
                     connection.Open();
-                    ExecuteSqlCommand(connection); // SQL komutunu çalıştır
+                    ExecuteSqlCommand(connection); // Run Sql command
                 }
                 catch (Exception ex)
                 {
@@ -184,10 +182,10 @@ namespace DatabaseConnection
                 {
                     connection.Open();
 
-                    // ComboBox'taki tablo isimlerini temizle
+                    // Clear the table names in the ComboBox
                     cmbTables.Items.Clear();
 
-                    // Veritabanından tablo isimlerini yeniden al ve ComboBox'a ekle
+                    // Retrieve the table names from the database again and add them to the ComboBox
                     FetchTableNames(connection);
 
                     MessageBox.Show("Data refreshed successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -201,7 +199,6 @@ namespace DatabaseConnection
 
         private void btnAddTable_Click(object sender, EventArgs e)
         {
-            // SQL scriptini RichTextBox'a ekleyelim
             string addTableScript = @"
             CREATE TABLE DatabaseDocument
             (
@@ -210,23 +207,20 @@ namespace DatabaseConnection
                 Content NVARCHAR(MAX) NOT NULL              -- Belge içeriği
             );";
 
-            richTextBoxSql.Text = addTableScript; // Scripti RichTextBox'a ekle
+            richTextBoxSql.Text = addTableScript; 
         }
 
         private void btnDeleteTable_Click(object sender, EventArgs e)
         {
-            // SQL scriptini RichTextBox'a ekleyelim
             string deleteTableScript = "DROP TABLE DatabaseDocument;";
 
-            richTextBoxSql.Text = deleteTableScript; // Scripti RichTextBox'a ekle
+            richTextBoxSql.Text = deleteTableScript; 
         }
 
-
-        //
-        // SQL komutları için liste (başlık + komut)
+        // SQL Command (title + command)
         private List<SqlCommandEntry> sqlCommands = new List<SqlCommandEntry>();
 
-        // SavedCommands.txt dosya yolunu proje kök dizinine yönlendiriyoruz
+        // Set the file path for SavedCommands.txt to the project root directory
         private string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "../../SavedCommands.txt");
 
         private void btnSaveCommand_Click(object sender, EventArgs e)
@@ -235,25 +229,22 @@ namespace DatabaseConnection
 
             if (!string.IsNullOrWhiteSpace(command))
             {
-                // Kullanıcıdan başlık girmesini iste
+                // Prompt the user to enter a title
                 string title = Prompt.ShowDialog("Please enter a title for the SQL command:", "Save SQL Command");
 
                 if (!string.IsNullOrWhiteSpace(title))
                 {
-                    // Yeni SQL komut girişini oluştur
+                    // Create a new SQL command entry
                     SqlCommandEntry newEntry = new SqlCommandEntry
                     {
                         Title = title,
                         Command = command
                     };
 
-                    // Listeye ekle
                     sqlCommands.Add(newEntry);
-
-                    // Dosyaya kaydet
                     File.AppendAllText(filePath, title + Environment.NewLine + command + Environment.NewLine);
 
-                    // Listeyi UI'de güncelle
+                    // Update the list in the UI
                     listBoxCommands.Items.Add(newEntry);
                 }
             }
@@ -273,7 +264,7 @@ namespace DatabaseConnection
                 {
                     if (i + 1 < lines.Length)
                     {
-                        // Başlık ve komut çiftlerini oluştur
+                        // Create title and command pairs
                         string title = lines[i];
                         string command = lines[i + 1];
 
@@ -283,7 +274,7 @@ namespace DatabaseConnection
                             Command = command
                         };
 
-                        // Listeye ekle
+                        // Add to the list
                         sqlCommands.Add(entry);
                         listBoxCommands.Items.Add(entry);
                     }
@@ -308,7 +299,7 @@ namespace DatabaseConnection
 
                 string newCommand = richTextBoxSql.Text;
 
-                // Listeyi güncelle
+                // Update List
                 selectedEntry.Command = newCommand;
                 UpdateCommandsFile();
 
@@ -316,7 +307,7 @@ namespace DatabaseConnection
             }
         }
 
-        // SQL komutlarının dosyasını güncellemek için metod
+        // Method to update the commands file
         private void UpdateCommandsFile()
         {
             List<string> lines = new List<string>();
@@ -334,32 +325,28 @@ namespace DatabaseConnection
         {
             if (listBoxCommands.SelectedItem != null)
             {
-                string selectedTitle = listBoxCommands.SelectedItem.ToString(); // Seçilen başlık
+                string selectedTitle = listBoxCommands.SelectedItem.ToString();
 
-                // Başlık üzerinden komutu buluyoruz
+                // Find the command by title
                 var commandToRemove = sqlCommands.FirstOrDefault(cmd => cmd.Title == selectedTitle);
 
                 if (commandToRemove != null)
                 {
-                    // Listeden komutu siliyoruz
+                    // Remove the command from the list
                     sqlCommands.Remove(commandToRemove);
-                    listBoxCommands.Items.Remove(selectedTitle); // ListBox'tan başlığı siliyoruz
-
-                    // Seçimi sıfırlıyoruz
+                    listBoxCommands.Items.Remove(selectedTitle);
                     listBoxCommands.ClearSelected();
-
-                    // ListBox'ı yenile
                     listBoxCommands.Refresh();
 
-                    // Dosyadaki kayıtları başlık ve komutlar ile güncelliyoruz
+                    // Update the records in the file with titles and commands
                     List<string> updatedCommands = new List<string>();
                     foreach (var command in sqlCommands)
                     {
-                        // Her komutu başlık ve script şeklinde kaydediyoruz
+                        // Save each command as a title and script
                         updatedCommands.Add(command.Title + Environment.NewLine + command.Command);
                     }
 
-                    // Dosyayı güncelle
+                    // Update File
                     File.WriteAllLines(filePath, updatedCommands);
                 }
                 else
@@ -380,27 +367,27 @@ namespace DatabaseConnection
                 {
                     connection.Open();
 
-                    // SELECT sorgusu oluştur
+                    // Create a SELECT query
                     string query = $"SELECT * FROM {selectedTable}";
 
-                    // DataAdapter ile veriyi çek
+                    // Retrieve data using DataAdapter
                     SqlDataAdapter dataAdapter = new SqlDataAdapter(query, connection);
 
-                    // UpdateCommand, InsertCommand ve DeleteCommand ayarları
+                    // Settings for UpdateCommand, InsertCommand, and DeleteCommand
                     SqlCommandBuilder commandBuilder = new SqlCommandBuilder(dataAdapter);
 
-                    // DataTable'ı güncelle
+                    // Update DataTable
                     DataTable changes = ((DataTable)dataGridView.DataSource).GetChanges();
 
                     if (changes != null)
                     {
-                        // Değişiklikleri veritabanına gönder
+                        // Send changes to the database
                         int updatedRows = dataAdapter.Update(changes);
 
-                        // Eğer değişiklik varsa bildir
+                        // Notify if there are changes
                         MessageBox.Show($"{updatedRows} rows updated in the database.", "Update Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                        // Değişiklikleri kabul et
+                        // Accept changes
                         ((DataTable)dataGridView.DataSource).AcceptChanges();
                     }
                     else

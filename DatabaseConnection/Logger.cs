@@ -11,7 +11,7 @@ namespace DatabaseConnection
     {
         private RichTextBox _logRichTextBox;
 
-        // Constructor ile RichTextBox referansını alıyoruz
+        // We receive the RichTextBox reference via the constructor
         public Logger(RichTextBox richTextBoxLog)
         {
             _logRichTextBox = richTextBoxLog;

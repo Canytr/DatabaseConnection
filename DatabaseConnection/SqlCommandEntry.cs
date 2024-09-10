@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DatabaseConnection
 {
-    // SQL komutlarını ve başlıkları tutmak için yeni bir sınıf
+    // A new class to hold SQL commands and titles
     public class SqlCommandEntry
     {
         public string Title { get; set; }
@@ -14,7 +14,7 @@ namespace DatabaseConnection
 
         public override string ToString()
         {
-            return Title; // ListBox'ta başlık gösterilecek
+            return Title; // The title will be displayed in the ListBox
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace DatabaseConnection
 {
-    // Dialog penceresi göstermek için bir yardımcı sınıf
+    // A helper class to display a dialog window
     public static class Prompt
     {
         public static string ShowDialog(string text, string caption)
