@@ -425,5 +425,15 @@ namespace DatabaseConnection
                 }
             }
         }
+
+        private void btnDocument_Click(object sender, EventArgs e)
+        {
+            //not implemented
+        }
+
+        private void btnPhrase_Click(object sender, EventArgs e)
+        {
+            //not implemented
+        }
     }
 }

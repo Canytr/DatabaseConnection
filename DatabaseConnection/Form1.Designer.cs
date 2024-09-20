@@ -277,6 +277,7 @@
             this.btnDocument.TabIndex = 29;
             this.btnDocument.Text = "Add Document";
             this.btnDocument.UseVisualStyleBackColor = true;
+            this.btnDocument.Click += new System.EventHandler(this.btnDocument_Click);
             // 
             // btnPhrase
             // 
@@ -286,6 +287,7 @@
             this.btnPhrase.TabIndex = 30;
             this.btnPhrase.Text = "Add Phrase";
             this.btnPhrase.UseVisualStyleBackColor = true;
+            this.btnPhrase.Click += new System.EventHandler(this.btnPhrase_Click);
             // 
             // Form1
             // 
