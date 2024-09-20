@@ -402,5 +402,28 @@ namespace DatabaseConnection
             }
         }
 
+        private void btnOpen_Click(object sender, EventArgs e)
+        {
+            // OpenFileDialog oluşturuyoruz
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Text Files|*.txt|All Files|*.*"; // İstediğiniz dosya türüne göre filtre ekleyebilirsiniz
+            openFileDialog.Title = "Bir dosya seçin";
+
+            // Eğer kullanıcı bir dosya seçip "OK" butonuna basarsa
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    // Seçilen dosyanın içeriğini okuyup RichTextBox'a aktarıyoruz
+                    string fileContent = File.ReadAllText(openFileDialog.FileName);
+                    richTextBoxDocument.Text = fileContent;
+                }
+                catch (Exception ex)
+                {
+                    // Hata yakalayıp mesaj gösteriyoruz
+                    MessageBox.Show("Dosya okunurken bir hata oluştu: " + ex.Message);
+                }
+            }
+        }
     }
 }

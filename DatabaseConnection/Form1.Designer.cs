@@ -48,6 +48,10 @@
             this.btnDeleteCommand = new System.Windows.Forms.Button();
             this.listBoxCommands = new System.Windows.Forms.ListBox();
             this.btnSaveChanges = new System.Windows.Forms.Button();
+            this.btnOpen = new System.Windows.Forms.Button();
+            this.richTextBoxDocument = new System.Windows.Forms.RichTextBox();
+            this.btnDocument = new System.Windows.Forms.Button();
+            this.btnPhrase = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -247,9 +251,49 @@
             this.btnSaveChanges.UseVisualStyleBackColor = true;
             this.btnSaveChanges.Click += new System.EventHandler(this.btnSaveChanges_Click);
             // 
+            // btnOpen
+            // 
+            this.btnOpen.Location = new System.Drawing.Point(887, 18);
+            this.btnOpen.Name = "btnOpen";
+            this.btnOpen.Size = new System.Drawing.Size(113, 39);
+            this.btnOpen.TabIndex = 27;
+            this.btnOpen.Text = "Open";
+            this.btnOpen.UseVisualStyleBackColor = true;
+            this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
+            // 
+            // richTextBoxDocument
+            // 
+            this.richTextBoxDocument.Location = new System.Drawing.Point(887, 64);
+            this.richTextBoxDocument.Name = "richTextBoxDocument";
+            this.richTextBoxDocument.Size = new System.Drawing.Size(358, 268);
+            this.richTextBoxDocument.TabIndex = 28;
+            this.richTextBoxDocument.Text = "";
+            // 
+            // btnDocument
+            // 
+            this.btnDocument.Location = new System.Drawing.Point(887, 354);
+            this.btnDocument.Name = "btnDocument";
+            this.btnDocument.Size = new System.Drawing.Size(87, 23);
+            this.btnDocument.TabIndex = 29;
+            this.btnDocument.Text = "Add Document";
+            this.btnDocument.UseVisualStyleBackColor = true;
+            // 
+            // btnPhrase
+            // 
+            this.btnPhrase.Location = new System.Drawing.Point(1003, 354);
+            this.btnPhrase.Name = "btnPhrase";
+            this.btnPhrase.Size = new System.Drawing.Size(87, 23);
+            this.btnPhrase.TabIndex = 30;
+            this.btnPhrase.Text = "Add Phrase";
+            this.btnPhrase.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
-            this.ClientSize = new System.Drawing.Size(893, 617);
+            this.ClientSize = new System.Drawing.Size(1283, 617);
+            this.Controls.Add(this.btnPhrase);
+            this.Controls.Add(this.btnDocument);
+            this.Controls.Add(this.richTextBoxDocument);
+            this.Controls.Add(this.btnOpen);
             this.Controls.Add(this.btnSaveChanges);
             this.Controls.Add(this.listBoxCommands);
             this.Controls.Add(this.btnDeleteCommand);
@@ -298,6 +342,10 @@
         private System.Windows.Forms.Button btnDeleteCommand;
         private System.Windows.Forms.ListBox listBoxCommands;
         private System.Windows.Forms.Button btnSaveChanges;
+        private System.Windows.Forms.Button btnOpen;
+        private System.Windows.Forms.RichTextBox richTextBoxDocument;
+        private System.Windows.Forms.Button btnDocument;
+        private System.Windows.Forms.Button btnPhrase;
     }
 }
 
