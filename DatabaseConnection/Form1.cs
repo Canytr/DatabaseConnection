@@ -19,7 +19,7 @@ namespace DatabaseConnection
 
             // We create the Logger object and pass the RichTextBox reference
             _logger = new Logger(richTextBoxLog);
-
+            
             txtConnectionString.AppendText("Data Source=DESKTOP-9FBPMP7\\SQLEXPRESS;Initial Catalog=Help_Menu;Integrated Security=True;Pooling=False;Encrypt=False\r\n");
             cmbTables.SelectedIndexChanged += cmbTables_SelectedIndexChanged;
 
@@ -55,7 +55,7 @@ namespace DatabaseConnection
         {
             // Get the table name selected from the ComboBox
             string selectedTable = cmbTables.SelectedItem.ToString();
-            string query = $"SELECT TOP 10 * FROM {selectedTable}"; // Load top 10 row
+            string query = $"SELECT * FROM {selectedTable}"; // Load top 10 row
 
             SqlDataAdapter dataAdapter = new SqlDataAdapter(query, connection);
             DataTable dataTable = new DataTable();
@@ -99,7 +99,7 @@ namespace DatabaseConnection
                 try
                 {
                     connection.Open();
-                    MessageBox.Show("Connection successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                   // MessageBox.Show("Connection successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     _logger.LogMessage("Connection successful!", Logger.LogLevel.Info);
 
                     // Retrieve the table names and load them into the ComboBox
@@ -114,9 +114,9 @@ namespace DatabaseConnection
         }
 
         // Method to execute the SQL command
-        private void ExecuteSqlCommand(SqlConnection connection)
+        private void ExecuteSqlCommand(SqlConnection connection,string query)
         {
-            string query = richTextBoxSql.Text; 
+            
 
             if (string.IsNullOrWhiteSpace(query))
             {
@@ -157,13 +157,14 @@ namespace DatabaseConnection
         private void btnExecute_Click(object sender, EventArgs e)
         {
             string connectionString = txtConnectionString.Text;
+            string query = richTextBoxSql.Text;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 try
                 {
                     connection.Open();
-                    ExecuteSqlCommand(connection); // Run Sql command
+                    ExecuteSqlCommand(connection,query); // Run Sql command
                 }
                 catch (Exception ex)
                 {
@@ -197,25 +198,25 @@ namespace DatabaseConnection
             }
         }
 
-        private void btnAddTable_Click(object sender, EventArgs e)
-        {
-            string addTableScript = @"
-            CREATE TABLE DatabaseDocument
-            (
-                DocumentID INT IDENTITY(1,1) PRIMARY KEY,   -- Benzersiz belge kimliği (otomatik artan)
-                Title NVARCHAR(255) NOT NULL,               -- Belge başlığı
-                Content NVARCHAR(MAX) NOT NULL              -- Belge içeriği
-            );";
+        //private void btnAddTable_Click(object sender, EventArgs e)
+        //{
+        //    string addTableScript = @"
+        //    CREATE TABLE DatabaseDocument
+        //    (
+        //        DocumentID INT IDENTITY(1,1) PRIMARY KEY,   -- Benzersiz belge kimliği (otomatik artan)
+        //        Title NVARCHAR(255) NOT NULL,               -- Belge başlığı
+        //        Content NVARCHAR(MAX) NOT NULL              -- Belge içeriği
+        //    );";
 
-            richTextBoxSql.Text = addTableScript; 
-        }
+        //    richTextBoxSql.Text = addTableScript; 
+        //}
 
-        private void btnDeleteTable_Click(object sender, EventArgs e)
-        {
-            string deleteTableScript = "DROP TABLE DatabaseDocument;";
+        //private void btnDeleteTable_Click(object sender, EventArgs e)
+        //{
+        //    string deleteTableScript = "DROP TABLE DatabaseDocument;";
 
-            richTextBoxSql.Text = deleteTableScript; 
-        }
+        //    richTextBoxSql.Text = deleteTableScript; 
+        //}
 
         // SQL Command (title + command)
         private List<SqlCommandEntry> sqlCommands = new List<SqlCommandEntry>();
@@ -402,5 +403,59 @@ namespace DatabaseConnection
             }
         }
 
+        private void button_TableUpdate_Click(object sender, EventArgs e)
+        {
+            string selectedTable = cmbTables.SelectedItem.ToString();
+            string query = $"SELECT * FROM {selectedTable}";
+            _logger.LogMessage(selectedTable, Logger.LogLevel.Info);
+            string connectionString = txtConnectionString.Text;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    ExecuteSqlCommand(connection, query); // Run Sql command
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Connection failed: {ex.Message}\n\n{ex.StackTrace}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void button_Search_Click(object sender, EventArgs e)
+        {
+            string selectedTable = cmbTables.SelectedItem.ToString();
+            string search = textBox_Search.Text.ToString();
+            string query = $"SELECT * FROM {selectedTable}\r\n" +
+                $"WHERE \r\n    " +
+                $"UserName LIKE '%{search}%' OR\r\n    " +
+                $"Email LIKE '%{search}%' OR\r\n    " +
+                $"Password LIKE '%{search}%' OR\r\n    " +
+                $"PhoneNumber LIKE '%{search}%' OR\r\n    " +
+                $"CompanyName LIKE '%{search}%' OR\r\n    " +
+                $"MachineName LIKE '%{search}%' OR\r\n    " +
+                $"CreatedAt LIKE '%{search}%' OR\r\n    " +
+                $"PostProcessor LIKE '%{search}%';";
+            _logger.LogMessage(query, Logger.LogLevel.Info);
+
+            string connectionString = txtConnectionString.Text;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                try
+                {
+                    connection.Open();
+                    ExecuteSqlCommand(connection, query); // Run Sql command
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Connection failed: {ex.Message}\n\n{ex.StackTrace}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+       
     }
 }
