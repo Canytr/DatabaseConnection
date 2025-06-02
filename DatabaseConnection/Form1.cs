@@ -5,6 +5,8 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using ClosedXML.Excel;
+
 
 namespace DatabaseConnection
 {
@@ -129,7 +131,7 @@ namespace DatabaseConnection
             try
             {
 
-                _logger.LogMessage($"Executing SQL Command: {query}", Logger.LogLevel.Info);
+                _logger.LogMessage($"Executing SQL Command ", Logger.LogLevel.Info);
 
                 if (query.Trim().StartsWith("SELECT", StringComparison.OrdinalIgnoreCase))
                 {
@@ -407,7 +409,7 @@ namespace DatabaseConnection
         {
             string selectedTable = cmbTables.SelectedItem.ToString();
             string query = $"SELECT * FROM {selectedTable}";
-            _logger.LogMessage(selectedTable, Logger.LogLevel.Info);
+            _logger.LogMessage(selectedTable+" Table Update", Logger.LogLevel.Info);
             string connectionString = txtConnectionString.Text;
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -437,8 +439,10 @@ namespace DatabaseConnection
                 $"CompanyName LIKE '%{search}%' OR\r\n    " +
                 $"MachineName LIKE '%{search}%' OR\r\n    " +
                 $"CreatedAt LIKE '%{search}%' OR\r\n    " +
-                $"PostProcessor LIKE '%{search}%';";
-            _logger.LogMessage(query, Logger.LogLevel.Info);
+                $"PostProcessor LIKE '%{search}%' OR\r\n "+
+                $"NOTES LIKE '%{search}%'; ";
+           
+            _logger.LogMessage(search+" Search", Logger.LogLevel.Info);
 
             string connectionString = txtConnectionString.Text;
 
@@ -456,6 +460,56 @@ namespace DatabaseConnection
             }
         }
 
-       
+        private void btnPrint_Click(object sender, EventArgs e)
+        {
+            if (dataGridView.Rows.Count == 0)
+            {
+                MessageBox.Show("Görüntülenen tabloda veri yok.", "Uyarı", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Seçili tablo adını al (ComboBox’tan)
+            string selectedTable = cmbTables.SelectedItem.ToString() ?? "ExportedTable";
+
+            using (SaveFileDialog saveFileDialog = new SaveFileDialog())
+            {
+                saveFileDialog.Filter = "Excel Files (*.xlsx)|*.xlsx";
+                saveFileDialog.FileName = selectedTable + ".xlsx";
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        using (var workbook = new XLWorkbook())
+                        {
+                            var worksheet = workbook.Worksheets.Add(selectedTable);
+
+                            // Başlıkları yaz
+                            for (int i = 0; i < dataGridView.Columns.Count; i++)
+                            {
+                                worksheet.Cell(1, i + 1).Value = dataGridView.Columns[i].HeaderText;
+                            }
+
+                            // Verileri yaz
+                            for (int i = 0; i < dataGridView.Rows.Count; i++)
+                            {
+                                for (int j = 0; j < dataGridView.Columns.Count; j++)
+                                {
+                                    worksheet.Cell(i + 2, j + 1).Value = dataGridView.Rows[i].Cells[j].Value?.ToString() ?? "";
+                                }
+                            }
+
+                            workbook.SaveAs(saveFileDialog.FileName);
+                        }
+
+                        MessageBox.Show("Excel dosyası başarıyla kaydedildi.", "Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Hata oluştu: " + ex.Message, "Hata", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
     }
 }

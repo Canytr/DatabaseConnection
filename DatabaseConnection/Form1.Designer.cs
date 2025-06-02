@@ -49,12 +49,15 @@
             this.textBox_Search = new System.Windows.Forms.TextBox();
             this.button_Search = new System.Windows.Forms.Button();
             this.button_TableUpdate = new System.Windows.Forms.Button();
+            this.btnPrint = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // txtConnectionString
             // 
             this.txtConnectionString.Location = new System.Drawing.Point(214, 21);
+            this.txtConnectionString.MaximumSize = new System.Drawing.Size(700, 23);
+            this.txtConnectionString.MinimumSize = new System.Drawing.Size(485, 23);
             this.txtConnectionString.Name = "txtConnectionString";
             this.txtConnectionString.Size = new System.Drawing.Size(485, 23);
             this.txtConnectionString.TabIndex = 0;
@@ -95,7 +98,7 @@
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Location = new System.Drawing.Point(28, 63);
             this.dataGridView.Name = "dataGridView";
-            this.dataGridView.Size = new System.Drawing.Size(1118, 423);
+            this.dataGridView.Size = new System.Drawing.Size(1146, 423);
             this.dataGridView.TabIndex = 10;
             // 
             // labelSelectTable
@@ -133,9 +136,9 @@
             // 
             // richTextBoxSql
             // 
-            this.richTextBoxSql.Location = new System.Drawing.Point(62, 524);
+            this.richTextBoxSql.Location = new System.Drawing.Point(28, 524);
             this.richTextBoxSql.Name = "richTextBoxSql";
-            this.richTextBoxSql.Size = new System.Drawing.Size(423, 81);
+            this.richTextBoxSql.Size = new System.Drawing.Size(407, 81);
             this.richTextBoxSql.TabIndex = 15;
             this.richTextBoxSql.Text = "";
             // 
@@ -164,74 +167,79 @@
             // 
             // richTextBoxLog
             // 
-            this.richTextBoxLog.Location = new System.Drawing.Point(667, 544);
+            this.richTextBoxLog.Location = new System.Drawing.Point(639, 544);
             this.richTextBoxLog.Name = "richTextBoxLog";
-            this.richTextBoxLog.Size = new System.Drawing.Size(507, 61);
+            this.richTextBoxLog.Size = new System.Drawing.Size(535, 61);
             this.richTextBoxLog.TabIndex = 20;
             this.richTextBoxLog.Text = "";
             // 
             // btnSaveCommand
             // 
+            this.btnSaveCommand.BackColor = System.Drawing.SystemColors.Highlight;
             this.btnSaveCommand.Location = new System.Drawing.Point(255, 493);
             this.btnSaveCommand.Name = "btnSaveCommand";
-            this.btnSaveCommand.Size = new System.Drawing.Size(87, 23);
+            this.btnSaveCommand.Size = new System.Drawing.Size(87, 27);
             this.btnSaveCommand.TabIndex = 21;
             this.btnSaveCommand.Text = "Save Script";
-            this.btnSaveCommand.UseVisualStyleBackColor = true;
+            this.btnSaveCommand.UseVisualStyleBackColor = false;
             this.btnSaveCommand.Click += new System.EventHandler(this.btnSaveCommand_Click);
             // 
             // btnLoadCommand
             // 
-            this.btnLoadCommand.Location = new System.Drawing.Point(348, 493);
+            this.btnLoadCommand.BackColor = System.Drawing.SystemColors.Highlight;
+            this.btnLoadCommand.Location = new System.Drawing.Point(348, 494);
             this.btnLoadCommand.Name = "btnLoadCommand";
-            this.btnLoadCommand.Size = new System.Drawing.Size(87, 23);
+            this.btnLoadCommand.Size = new System.Drawing.Size(87, 27);
             this.btnLoadCommand.TabIndex = 22;
             this.btnLoadCommand.Text = "Load Script";
-            this.btnLoadCommand.UseVisualStyleBackColor = true;
+            this.btnLoadCommand.UseVisualStyleBackColor = false;
             this.btnLoadCommand.Click += new System.EventHandler(this.btnLoadCommand_Click);
             // 
             // btnEditCommand
             // 
+            this.btnEditCommand.BackColor = System.Drawing.SystemColors.Highlight;
             this.btnEditCommand.Location = new System.Drawing.Point(441, 494);
             this.btnEditCommand.Name = "btnEditCommand";
-            this.btnEditCommand.Size = new System.Drawing.Size(87, 23);
+            this.btnEditCommand.Size = new System.Drawing.Size(87, 27);
             this.btnEditCommand.TabIndex = 23;
             this.btnEditCommand.Text = "Edit Script";
-            this.btnEditCommand.UseVisualStyleBackColor = true;
+            this.btnEditCommand.UseVisualStyleBackColor = false;
             this.btnEditCommand.Click += new System.EventHandler(this.btnEditCommand_Click);
             // 
             // btnDeleteCommand
             // 
-            this.btnDeleteCommand.Location = new System.Drawing.Point(534, 495);
+            this.btnDeleteCommand.BackColor = System.Drawing.SystemColors.Highlight;
+            this.btnDeleteCommand.Location = new System.Drawing.Point(534, 494);
             this.btnDeleteCommand.Name = "btnDeleteCommand";
-            this.btnDeleteCommand.Size = new System.Drawing.Size(87, 23);
+            this.btnDeleteCommand.Size = new System.Drawing.Size(87, 27);
             this.btnDeleteCommand.TabIndex = 24;
             this.btnDeleteCommand.Text = "Delete Script";
-            this.btnDeleteCommand.UseVisualStyleBackColor = true;
+            this.btnDeleteCommand.UseVisualStyleBackColor = false;
             this.btnDeleteCommand.Click += new System.EventHandler(this.btnDeleteCommand_Click);
             // 
             // listBoxCommands
             // 
             this.listBoxCommands.FormattingEnabled = true;
             this.listBoxCommands.ItemHeight = 16;
-            this.listBoxCommands.Location = new System.Drawing.Point(491, 524);
+            this.listBoxCommands.Location = new System.Drawing.Point(441, 524);
             this.listBoxCommands.Name = "listBoxCommands";
-            this.listBoxCommands.Size = new System.Drawing.Size(144, 84);
+            this.listBoxCommands.Size = new System.Drawing.Size(180, 84);
             this.listBoxCommands.TabIndex = 25;
             // 
             // btnSaveChanges
             // 
-            this.btnSaveChanges.Location = new System.Drawing.Point(1034, 492);
+            this.btnSaveChanges.BackColor = System.Drawing.SystemColors.Highlight;
+            this.btnSaveChanges.Location = new System.Drawing.Point(984, 492);
             this.btnSaveChanges.Name = "btnSaveChanges";
-            this.btnSaveChanges.Size = new System.Drawing.Size(112, 43);
+            this.btnSaveChanges.Size = new System.Drawing.Size(95, 45);
             this.btnSaveChanges.TabIndex = 26;
             this.btnSaveChanges.Text = "Save Changes";
-            this.btnSaveChanges.UseVisualStyleBackColor = true;
+            this.btnSaveChanges.UseVisualStyleBackColor = false;
             this.btnSaveChanges.Click += new System.EventHandler(this.btnSaveChanges_Click);
             // 
             // textBox_Search
             // 
-            this.textBox_Search.Location = new System.Drawing.Point(667, 498);
+            this.textBox_Search.Location = new System.Drawing.Point(639, 498);
             this.textBox_Search.Name = "textBox_Search";
             this.textBox_Search.Size = new System.Drawing.Size(151, 23);
             this.textBox_Search.TabIndex = 27;
@@ -239,27 +247,43 @@
             // 
             // button_Search
             // 
-            this.button_Search.Location = new System.Drawing.Point(824, 493);
+            this.button_Search.BackColor = System.Drawing.SystemColors.Highlight;
+            this.button_Search.Location = new System.Drawing.Point(796, 493);
             this.button_Search.Name = "button_Search";
-            this.button_Search.Size = new System.Drawing.Size(91, 41);
+            this.button_Search.Size = new System.Drawing.Size(90, 45);
             this.button_Search.TabIndex = 28;
             this.button_Search.Text = "Search";
-            this.button_Search.UseVisualStyleBackColor = true;
+            this.button_Search.UseVisualStyleBackColor = false;
             this.button_Search.Click += new System.EventHandler(this.button_Search_Click);
             // 
             // button_TableUpdate
             // 
-            this.button_TableUpdate.Location = new System.Drawing.Point(921, 492);
+            this.button_TableUpdate.BackColor = System.Drawing.SystemColors.Highlight;
+            this.button_TableUpdate.Location = new System.Drawing.Point(888, 492);
             this.button_TableUpdate.Name = "button_TableUpdate";
-            this.button_TableUpdate.Size = new System.Drawing.Size(107, 41);
+            this.button_TableUpdate.Size = new System.Drawing.Size(90, 45);
             this.button_TableUpdate.TabIndex = 29;
             this.button_TableUpdate.Text = "Table Update";
-            this.button_TableUpdate.UseVisualStyleBackColor = true;
+            this.button_TableUpdate.UseVisualStyleBackColor = false;
             this.button_TableUpdate.Click += new System.EventHandler(this.button_TableUpdate_Click);
+            // 
+            // btnPrint
+            // 
+            this.btnPrint.BackColor = System.Drawing.SystemColors.Highlight;
+            this.btnPrint.Location = new System.Drawing.Point(1085, 493);
+            this.btnPrint.Name = "btnPrint";
+            this.btnPrint.Size = new System.Drawing.Size(90, 45);
+            this.btnPrint.TabIndex = 30;
+            this.btnPrint.Text = "Pirint Table (.xlsx)";
+            this.btnPrint.UseVisualStyleBackColor = false;
+            this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
             // 
             // Form1
             // 
+            this.AutoSize = true;
+            this.BackColor = System.Drawing.SystemColors.ControlLight;
             this.ClientSize = new System.Drawing.Size(1186, 617);
+            this.Controls.Add(this.btnPrint);
             this.Controls.Add(this.button_TableUpdate);
             this.Controls.Add(this.button_Search);
             this.Controls.Add(this.textBox_Search);
@@ -311,6 +335,7 @@
         private System.Windows.Forms.TextBox textBox_Search;
         private System.Windows.Forms.Button button_Search;
         private System.Windows.Forms.Button button_TableUpdate;
+        private System.Windows.Forms.Button btnPrint;
     }
 }
 
